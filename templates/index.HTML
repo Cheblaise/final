@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Phishing URL Detector</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    form {
+      background: #fff;
+      padding: 20px 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      max-width: 500px;
+      width: 100%;
+    }
+
+    input[type="text"] {
+      flex: 1;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      width: 100%;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    #result {
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+      color: #444;
+      text-align: center;
+    }
+
+    .phishing {
+      color: #d9534f;
+    }
+
+    .safe {
+      color: #28a745;
+    }
+
+    #featureAnalysis {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #fff;
+      border-radius: 8px;
+      max-width: 600px;
+      width: 90%;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    #featureAnalysis h3 {
+      margin-top: 0;
+      font-size: 18px;
+      color: #007bff;
+      text-align: center;
+    }
+
+    #featureAnalysis ul {
+      list-style-type: none;
+      padding-left: 0;
+    }
+
+    #featureAnalysis li {
+      padding: 4px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    #featureAnalysis li:last-child {
+      border-bottom: none;
+    }
+
+    #featureAnalysis strong {
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <h1>Phishing URL Detector</h1>
+  <form id="urlForm">
+    <input type="text" id="url" placeholder="Enter a URL (e.g., https://example.com)" required />
+    <button type="submit">Check</button>
+  </form>
+
+  <p id="result"></p>
+  <div id="featureAnalysis"></div>
+
+  <script>
+    document.getElementById("urlForm").addEventListener("submit", async function (e) {
+      e.preventDefault();
+      const url = document.getElementById("url").value.trim();
+      const resultEl = document.getElementById("result");
+      const analysisEl = document.getElementById("featureAnalysis");
+
+      if (!url) {
+        resultEl.textContent = "Please enter a valid URL.";
+        resultEl.className = '';
+        analysisEl.innerHTML = '';
+        return;
+      }
+
+      resultEl.textContent = "Checking...";
+      resultEl.className = '';
+      analysisEl.innerHTML = '';
+
+      try {
+        const response = await fetch("/predict", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ url: url }),
+        });
+
+        const result = await response.json();
+
+        if (result.error) {
+          resultEl.textContent = "❌ Error: " + result.error;
+          resultEl.className = "phishing";
+          analysisEl.innerHTML = '';
+        } else {
+          const message = result.is_phishing
+            ? `⚠️ Phishing detected (confidence: ${result.probability})`
+            : `✅ Safe site (confidence: ${result.probability})`;
+
+          resultEl.textContent = message;
+          resultEl.className = result.is_phishing ? "phishing" : "safe";
+
+          const features = result.features;
+          if (features) {
+            let html = "<h3>🔍 Feature Analysis</h3><ul>";
+            for (const [key, value] of Object.entries(features)) {
+              html += `<li><strong>${key}</strong>: ${value}</li>`;
+            }
+            html += "</ul>";
+            analysisEl.innerHTML = html;
+          }
+        }
+      } catch (error) {
+        resultEl.textContent = "❌ Could not connect to the server.";
+        resultEl.className = "phishing";
+        analysisEl.innerHTML = '';
+      }
+    });
+  </script>
+</body>
+</html>
