@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>{{ title or "Daily Scan Trends" }}</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    /* Reset box-sizing */
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    /* Reset some default margins */
+    body, h1 {
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f9fafb;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px 20px;
+      min-height: 100vh;
+    }
+
+    h1 {
+      margin-bottom: 8px;
+      font-weight: 700;
+      color: #007bff;
+      text-align: center;
+      font-size: 2rem;
+    }
+
+    .summary {
+      font-size: 1rem;
+      color: #555;
+      margin-bottom: 25px;
+      text-align: center;
+      font-weight: 500;
+    }
+
+    /* Canvas container to control chart size */
+    #dailyChart {
+      max-width: 900px;
+      width: 100%;
+      height: 400px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      padding: 20px;
+      margin-bottom: 40px;
+    }
+
+    /* Styled back button */
+    a.button {
+      display: inline-block;
+      background-color: #007bff;
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      padding: 12px 24px;
+      border-radius: 6px;
+      box-shadow: 0 3px 6px rgba(0,123,255,0.4);
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      font-size: 1rem;
+      user-select: none;
+    }
+    a.button:hover, a.button:focus {
+      background-color: #0056b3;
+      box-shadow: 0 6px 12px rgba(0,86,179,0.6);
+    }
+    a.button:active {
+      background-color: #004085;
+      box-shadow: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>{{ title or "Daily Scan Trends" }}</h1>
+
+  <div class="summary">
+    Showing <strong>{{ period_count or 'N/A' }} days</strong>,
+    with a total of <strong>{{ total_scans or '0' }} scans</strong>.
+  </div>
+
+  <canvas id="dailyChart"></canvas>
+  <a href="/" class="button" role="button" aria-label="Back to Dashboard">← Back to Dashboard</a>
+
+  <script>
+    const ctx = document.getElementById('dailyChart').getContext('2d');
+    const labels = {{ daily_labels|tojson }};
+    const dataPoints = {{ daily_counts|tojson }};
+    
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Scans per Day',
+          data: dataPoints,
+          backgroundColor: 'rgba(0,123,255,0.2)',
+          borderColor: 'rgba(0,123,255,1)',
+          borderWidth: 2,
+          fill: true,
+          tension: 0.3,
+          pointRadius: 4,
+          pointHoverRadius: 6,
+          pointBackgroundColor: 'rgba(0,123,255,1)',
+          pointHoverBackgroundColor: '#fff',
+          pointHoverBorderColor: 'rgba(0,123,255,1)',
+          pointHoverBorderWidth: 2,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              stepSize: 1,
+              font: { size: 12 }
+            },
+            grid: {
+              color: '#eaeaea'
+            },
+            title: {
+              display: true,
+              text: 'Number of Scans',
+              font: { size: 14, weight: '600' },
+              color: '#007bff'
+            }
+          },
+          x: {
+            ticks: { font: { size: 12 } },
+            grid: {
+              color: '#eaeaea'
+            },
+            title: {
+              display: true,
+              text: 'Date',
+              font: { size: 14, weight: '600' },
+              color: '#007bff'
+            }
+          }
+        },
+        plugins: {
+          legend: {
+            labels: {
+              font: {
+                size: 14,
+                weight: '600'
+              },
+              color: '#007bff'
+            }
+          },
+          tooltip: {
+            mode: 'index',
+            intersect: false,
+            backgroundColor: '#007bff',
+            titleColor: '#fff',
+            bodyColor: '#fff',
+            cornerRadius: 4,
+            callbacks: {
+              title: function(tooltipItems) {
+                return `Scans on ${tooltipItems[0].label}`;
+              }
+            }
+          }
+        },
+        interaction: {
+          mode: 'nearest',
+          axis: 'x',
+          intersect: false
+        }
+      }
+    });
+  </script>
+</body>
+</html>

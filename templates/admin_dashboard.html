@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Admin Dashboard (Admin Home) – Summary Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            margin: 20px;
+            color: #333;
+        }
+        h1, h2 {
+            color: #222;
+        }
+        .summary-box {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 15px 20px;
+            margin-bottom: 25px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 40px;
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px 15px;
+            text-align: left;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+            font-weight: 600;
+        }
+        a.button {
+            display: inline-block;
+            padding: 8px 16px;
+            margin: 10px 0 20px 0;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+        a.button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Admin Dashboard (Admin Home) – Summary Page</h1>
+
+    <div class="summary-box">
+        <strong>Total URLs Scanned:</strong> {{ total_urls }}
+    </div>
+
+    <h2>Phishing Sites</h2>
+    <a href="/export/phishing" class="button">Download CSV</a>
+    <table>
+        <thead>
+            <tr>
+                <th>URL</th>
+                <th>Probability</th>
+                <th>Date/Time of Scan</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for url, prob, timestamp in phishing_sites %}
+            <tr>
+                <td>{{ url }}</td>
+                <td>{{ prob }}</td>
+                <td>{{ timestamp }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="3">No phishing sites found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Safe Sites</h2>
+    <a href="/export/safe" class="button">Download CSV</a>
+    <table>
+        <thead>
+            <tr>
+                <th>URL</th>
+                <th>Probability</th>
+                <th>Date/Time of Scan</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for url, prob, timestamp in safe_sites %}
+            <tr>
+                <td>{{ url }}</td>
+                <td>{{ prob }}</td>
+                <td>{{ timestamp }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="3">No safe sites found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="summary-box">
+        <strong>View Scan Trends:</strong><br><br>
+        <a href="/trends/daily" class="button">📊 Daily Trends</a>
+        <a href="/trends/weekly" class="button">📈 Weekly Trends</a>
+        <a href="/trends/monthly" class="button">📅 Monthly Trends</a>
+        <a href="/trends/ratio" class="button">📊 Phishing vs Safe Ratio</a>
+    </div>
+
+</body>
+</html>

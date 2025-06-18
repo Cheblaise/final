@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Phishing vs Safe Sites Ratio</title>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Chart.js Data Labels Plugin -->
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f6f8;
+      color: #333;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-sizing: border-box;
+    }
+
+    h1 {
+      font-size: 1.6rem;
+      color: #007bff;
+      margin: 20px 0 10px;
+      text-align: center;
+    }
+
+    .nav-tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .nav-tabs a {
+      padding: 6px 14px;
+      background-color: #ffffff;
+      border: 2px solid #007bff;
+      color: #007bff;
+      text-decoration: none;
+      font-weight: 500;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+      font-size: 0.9rem;
+    }
+
+    .nav-tabs a:hover {
+      background-color: #007bff;
+      color: #ffffff;
+    }
+
+    .chart-container {
+      flex: 1;
+      max-width: 600px; /* increased from 400px */
+      width: 100%;
+      padding: 10px;
+    }
+
+    canvas {
+      width: 100% !important;
+      height: 450px !important; /* increased from 300px */
+      background: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+      display: block;
+    }
+
+    /* Center and add spacing for button below the chart */
+    .bottom-link {
+      margin: 15px 0 30px;
+      text-align: center;
+      white-space: normal;
+    }
+
+    .bottom-link a {
+      padding: 8px 18px;
+      background-color: #007bff;
+      color: #ffffff;
+      text-decoration: none;
+      border-radius: 5px;
+      font-weight: 500;
+      font-size: 0.9rem;
+      display: inline-block;
+    }
+
+    .bottom-link a:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Phishing vs Safe Sites Ratio</h1>
+
+  <div class="nav-tabs">
+    <a href="/trends/daily">Daily</a>
+    <a href="/trends/weekly">Weekly</a>
+    <a href="/trends/monthly">Monthly</a>
+    <a href="/trends/ratio">Phishing vs Safe</a>
+  </div>
+
+  <div class="chart-container">
+    <canvas id="ratioPieChart"></canvas>
+  </div>
+
+  <div class="bottom-link">
+    <a href="/">← Back to Dashboard</a>
+  </div>
+
+  <script>
+    const ctx = document.getElementById('ratioPieChart').getContext('2d');
+
+    new Chart(ctx, {
+      type: 'pie',
+      data: {
+        labels: ['Phishing Sites', 'Safe Sites'],
+        datasets: [{
+          label: 'URL Count',
+          data: [{{ phishing_count }}, {{ safe_count }}],
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.8)',
+            'rgba(75, 192, 192, 0.8)'
+          ],
+          borderColor: [
+            'rgba(255, 99, 132, 1)',
+            'rgba(75, 192, 192, 1)'
+          ],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: {
+              font: {
+                size: 14
+              }
+            }
+          },
+          title: {
+            display: true,
+            text: 'Ratio of Phishing to Safe Sites',
+            font: {
+              size: 18
+            },
+            color: '#333'
+          },
+          datalabels: {
+            color: '#fff',
+            font: {
+              weight: 'bold',
+              size: 16
+            },
+            formatter: (value, context) => {
+              const total = context.chart._metasets[0].total;
+              const percent = ((value / total) * 100).toFixed(1);
+              return `${percent}%`;
+            }
+          }
+        }
+      },
+      plugins: [ChartDataLabels]
+    });
+  </script>
+
+</body>
+</html>

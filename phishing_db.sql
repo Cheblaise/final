@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 17, 2025 at 12:08 AM
+-- Generation Time: Jun 18, 2025 at 10:21 PM
 -- Server version: 10.4.14-MariaDB
 -- PHP Version: 7.4.10
 
@@ -20,6 +20,26 @@ SET time_zone = "+00:00";
 --
 -- Database: `phishing_db`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `admins`
+--
+
+CREATE TABLE `admins` (
+  `id` int(11) NOT NULL,
+  `username` varchar(100) NOT NULL,
+  `password` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `admins`
+--
+
+INSERT INTO `admins` (`id`, `username`, `password`) VALUES
+(1, 'Che Blaise', '1234567890'),
+(2, 'Nji', '1234567890');
 
 -- --------------------------------------------------------
 
@@ -11154,18 +11174,29 @@ CREATE TABLE `phishing_sites` (
   `id` int(11) NOT NULL,
   `url` text NOT NULL,
   `probability` float DEFAULT NULL,
-  `checked_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `checked_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `timestamp` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `phishing_sites`
 --
 
-INSERT INTO `phishing_sites` (`id`, `url`, `probability`, `checked_at`) VALUES
-(1, 'http://www.get-rich-quick-scheme.com', 0.66, '2025-06-13 18:51:39'),
-(2, 'http://www.get-rich-quick-scheme.com', 0.66, '2025-06-13 18:52:35'),
-(3, 'https://www.allegrolokalnie.pl-okazje.icu', 0.734322, '2025-06-15 18:16:21'),
-(4, 'http://www.amazon-verification.com', 0.66, '2025-06-15 18:16:32');
+INSERT INTO `phishing_sites` (`id`, `url`, `probability`, `checked_at`, `timestamp`) VALUES
+(1, 'http://www.get-rich-quick-scheme.com', 0.66, '2025-06-13 18:51:39', '2025-06-17 02:33:45'),
+(2, 'http://www.get-rich-quick-scheme.com', 0.66, '2025-06-13 18:52:35', '2025-06-17 02:33:45'),
+(3, 'https://www.allegrolokalnie.pl-okazje.icu', 0.734322, '2025-06-15 18:16:21', '2025-06-17 02:33:45'),
+(4, 'http://www.amazon-verification.com', 0.66, '2025-06-15 18:16:32', '2025-06-17 02:33:45'),
+(5, 'http://www.amazon-verification.com', 0.66, '2025-06-16 23:33:48', '2025-06-17 02:33:45'),
+(6, 'http://secure-login.example.com', 0.66, '2025-06-17 23:34:21', '2025-06-18 00:34:21'),
+(7, 'http://www.get-rich-quick-scheme.com', 0.66, '2025-06-17 23:34:55', '2025-06-18 00:34:55'),
+(8, 'http://www.get-rich-quick-sch', 0.66, '2025-06-17 23:35:08', '2025-06-18 00:35:08'),
+(9, 'http://login.yourbank.com.fake-url.com', 0.734322, '2025-06-18 13:56:25', '2025-06-18 14:56:25'),
+(10, 'http://login.yourbank.com.fake-url.com', 0.734322, '2025-06-18 13:56:25', '2025-06-18 14:56:25'),
+(11, 'http://login.yourbank.com.fake-url.com', 0.734322, '2025-06-18 13:56:30', '2025-06-18 14:56:30'),
+(12, 'https://bankofamerica.securelogin.ru', 0.551964, '2025-06-18 19:44:52', '2025-06-18 20:44:52'),
+(13, 'http://paypal-update.com', 0.66, '2025-06-18 20:16:55', '2025-06-18 21:16:55'),
+(14, 'http://login.yourbank.com.fake-url.com', 0.734322, '2025-06-18 20:17:14', '2025-06-18 21:17:14');
 
 -- --------------------------------------------------------
 
@@ -11177,20 +11208,71 @@ CREATE TABLE `safe_sites` (
   `id` int(11) NOT NULL,
   `url` text NOT NULL,
   `probability` float DEFAULT NULL,
-  `checked_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `checked_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `timestamp` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `safe_sites`
 --
 
-INSERT INTO `safe_sites` (`id`, `url`, `probability`, `checked_at`) VALUES
-(1, 'https://www.google.com', 0.35443, '2025-06-15 17:59:58'),
-(2, 'https://www.google.com', 0.35443, '2025-06-15 18:16:41');
+INSERT INTO `safe_sites` (`id`, `url`, `probability`, `checked_at`, `timestamp`) VALUES
+(1, 'https://www.google.com', 0.35443, '2025-06-15 17:59:58', '2025-06-17 02:33:45'),
+(2, 'https://www.google.com', 0.35443, '2025-06-15 18:16:41', '2025-06-17 02:33:45'),
+(3, 'https://www.bbc.com/news', 0.35443, '2025-06-16 23:33:14', '2025-06-17 02:33:45'),
+(4, 'https://www.google.com', 0.35443, '2025-06-17 00:49:17', '2025-06-17 02:33:45'),
+(5, 'https://bankofamerica.securelogin.ru', 0.35443, '2025-06-17 00:50:00', '2025-06-17 02:33:45'),
+(6, 'https://bit.ly/RandomShortenedLink', 0.33443, '2025-06-17 00:50:39', '2025-06-17 02:33:45'),
+(7, 'https://www.micorsoft.com', 0.35443, '2025-06-17 15:05:13', '2025-06-17 16:05:13'),
+(8, 'https://www.antifishingwebsite.com', 0.35443, '2025-06-17 23:31:08', '2025-06-18 00:31:08'),
+(9, 'https://www.anhingwebsite.com', 0.30443, '2025-06-17 23:31:27', '2025-06-18 00:31:27'),
+(10, 'https://www.anhingwebsite.co', 0.30443, '2025-06-17 23:31:31', '2025-06-18 00:31:31'),
+(11, 'https://www.anhingwebsi', 0.29443, '2025-06-17 23:31:36', '2025-06-18 00:31:36'),
+(12, 'https://www.anhi', 0.29443, '2025-06-17 23:31:42', '2025-06-18 00:31:42'),
+(13, 'https://www.amazon.com', 0.35443, '2025-06-18 13:57:23', '2025-06-18 14:57:23'),
+(14, 'https://www.example.org/about', 0.30443, '2025-06-18 19:51:23', '2025-06-18 20:51:23'),
+(15, 'http://example.com', 0.35443, '2025-06-18 20:09:20', '2025-06-18 21:09:20'),
+(16, 'http://example.com', 0.35443, '2025-06-18 20:12:51', '2025-06-18 21:12:51'),
+(17, 'https://bit.ly/RandomShortenedLink', 0.33443, '2025-06-18 20:13:10', '2025-06-18 21:13:10'),
+(18, 'https://bit.ly/RandomShortenedLink', 0.33443, '2025-06-18 20:13:18', '2025-06-18 21:13:18'),
+(19, 'https://www.micorsoft.com', 0.35443, '2025-06-18 20:13:51', '2025-06-18 21:13:51'),
+(20, 'http://example.com', 0.35443, '2025-06-18 20:14:11', '2025-06-18 21:14:11'),
+(21, 'http://example.com', 0.35443, '2025-06-18 20:14:12', '2025-06-18 21:14:12'),
+(22, 'http://example.com', 0.35443, '2025-06-18 20:14:13', '2025-06-18 21:14:13'),
+(23, 'https://bankofamerica.securelogin.ru', 0.35443, '2025-06-18 20:14:41', '2025-06-18 21:14:41'),
+(24, 'https://bankofamerica.securelogin.ru', 0.35443, '2025-06-18 20:14:57', '2025-06-18 21:14:57'),
+(25, 'https://bit.ly/RandomShortenedLink', 0.33443, '2025-06-18 20:15:09', '2025-06-18 21:15:09'),
+(26, 'https://www.example.org/about', 0.35443, '2025-06-18 20:15:28', '2025-06-18 21:15:28');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users`
+--
+
+CREATE TABLE `users` (
+  `id` int(11) NOT NULL,
+  `username` varchar(100) NOT NULL,
+  `password` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `username`, `password`) VALUES
+(1, 'man', 'scrypt:32768:8:1$cg5ZRQfe1DPe35ty$7864366733902553c635b49894534d2035130450476fecb424d178fce5c8df27520d86bbe14381439c2224dc17514e73f6567697c84535b971988f27e16773ed');
 
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `admins`
+--
+ALTER TABLE `admins`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `username` (`username`);
 
 --
 -- Indexes for table `phishing_sites`
@@ -11205,20 +11287,39 @@ ALTER TABLE `safe_sites`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `username` (`username`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `admins`
+--
+ALTER TABLE `admins`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `phishing_sites`
 --
 ALTER TABLE `phishing_sites`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `safe_sites`
 --
 ALTER TABLE `safe_sites`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

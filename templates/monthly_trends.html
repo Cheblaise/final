@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Monthly Scan Trends</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 40px; background: #f4f4f4; }
+    h1 { color: #333; }
+    canvas { background: #fff; padding: 20px; border: 1px solid #ccc; }
+    a.button {
+        display: inline-block;
+        padding: 8px 12px;
+        margin: 20px 0;
+        background-color: #007BFF;
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+    }
+    a.button:hover {
+        background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <h1>Monthly Scan Trends</h1>
+  <canvas id="monthlyChart" width="600" height="300"></canvas>
+  <br>
+  <a href="/" class="button">← Back to Dashboard</a>
+
+  <script>
+    const ctx = document.getElementById('monthlyChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: {{ monthly_labels|tojson }},
+        datasets: [{
+          label: 'Scans per Month',
+          data: {{ monthly_counts|tojson }},
+          backgroundColor: 'rgba(255, 206, 86, 0.3)',
+          borderColor: 'rgba(255, 206, 86, 1)',
+          borderWidth: 2,
+          fill: true,
+          tension: 0.3
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>
